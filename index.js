@@ -61,4 +61,4 @@ new CronJob('0 0 */1 * * *', function() {
     };
   });
 
-}, null, true, 'America/Los_Angeles');
+}, null, true, 'America/New_York');
