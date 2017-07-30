@@ -1,5 +1,6 @@
 const fs = require('fs');
 const request = require('request');
+const CronJob = require('cron').CronJob;
 
 const options = {
   'uri': 'https://api.github.com/graphql',
@@ -42,19 +43,22 @@ const options = {
       } \
     }"
   }),
-}
+};
 
-request(options, function (error, response, body) {
-  if (error) {
-    return `ERROR!: ${error}`;
-  } else if (response.statusCode === 200) {
-    console.log('GitHub api was successfully queried 🎉\n');
-    fs.writeFile('data.json', body, (err) => {
-      if (err) throw err;
-      console.log(`data.json was successfully written 🎉\n`);
-    });
-    return;
-  } else {
-    return `Problem! Status code = ${response.statusCode}, response = ${response}`;
-  };
-});
+new CronJob('0 0 */1 * * *', function() {
+  request(options, function (error, response, body) {
+    if (error) {
+      return `ERROR!: ${error}`;
+    } else if (response.statusCode === 200) {
+      console.log('GitHub api was successfully queried 🎉\n');
+      fs.writeFile('data.json', body, (err) => {
+        if (err) throw err;
+        console.log(`data.json was successfully written 🎉\n`);
+      });
+      return;
+    } else {
+      return `Problem! Status code = ${response.statusCode}, response = ${response}`;
+    };
+  });
+
+}, null, true, 'America/Los_Angeles');
