@@ -55,6 +55,13 @@ new CronJob('0 0 */1 * * *', function() {
         if (err) throw err;
         console.log(`data.json was successfully written 🎉\n`);
       });
+      let timestamp = new Date();
+      const logEntry = `NCBI-Hackathons repos data refresh happened at ${timestamp} 🎉\n`;
+      console.log(`timestamp is ${timestamp}`);
+      fs.appendFile('data.log', logEntry, (err) => {
+        if (err) throw err;
+        console.log(`The timestamp ${timestamp} was appended to data.log 🎉\n`);
+      })
       return;
     } else {
       return `Problem! Status code = ${response.statusCode}, response = ${response}`;
