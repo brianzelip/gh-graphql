@@ -45,7 +45,7 @@ const options = {
   }),
 };
 
-new CronJob('0 0 */1 * * *', function() {
+new CronJob('0 */1 * * * *', function() {
   request(options, function (error, response, body) {
     if (error) {
       return `ERROR!: ${error}`;
