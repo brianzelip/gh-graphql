@@ -1,6 +1,9 @@
+const CronJob = require('cron').CronJob;
+const express = require('express');
 const fs = require('fs');
 const request = require('request');
-const CronJob = require('cron').CronJob;
+
+const app = express();
 
 const options = {
   'uri': 'https://api.github.com/graphql',
@@ -9,7 +12,7 @@ const options = {
     'User-Agent': 'brianzelip'
   },
   'auth': {
-    'bearer': 'token'
+    'bearer': process.env.TOKEN
   },
   'body': JSON.stringify({
     "query": "query { \
@@ -45,22 +48,22 @@ const options = {
   }),
 };
 
-new CronJob('0 */1 * * * *', function() {
+new CronJob('0 10 */1 * * *', function() {
   request(options, function (error, response, body) {
     if (error) {
       return `ERROR!: ${error}`;
     } else if (response.statusCode === 200) {
       console.log('GitHub api was successfully queried 🎉\n');
-      fs.writeFile('data.json', body, (err) => {
+      fs.writeFile('.data/data.json', body, (err) => {
         if (err) throw err;
-        console.log(`data.json was successfully written 🎉\n`);
+        console.log(`.data/data.json was successfully written 🎉\n`);
       });
       let timestamp = new Date();
       const logEntry = `NCBI-Hackathons repos data refresh happened at ${timestamp} 🎉\n`;
       console.log(`timestamp is ${timestamp}`);
-      fs.appendFile('data.log', logEntry, (err) => {
+      fs.appendFile('.data/data.log', logEntry, (err) => {
         if (err) throw err;
-        console.log(`The timestamp ${timestamp} was appended to data.log 🎉\n`);
+        console.log(`The timestamp ${timestamp} was appended to .data/data.log 🎉\n`);
       })
       return;
     } else {
@@ -69,3 +72,31 @@ new CronJob('0 */1 * * * *', function() {
   });
 
 }, null, true, 'America/New_York');
+
+
+/*
+  Thanks @Tim! https://support.glitch.com/t/expose-a-json-file-for-consumption/1843
+*/
+
+// http://expressjs.com/en/starter/static-files.html
+app.use(express.static('public'));
+
+// http://expressjs.com/en/starter/basic-routing.html
+app.get("/", function (request, response) {
+  response.sendFile(__dirname + '/views/index.html');
+});
+
+// listen for requests :)
+var listener = app.listen(process.env.PORT, function () {
+  console.log('Your app is listening on port ' + listener.address().port);
+});
+
+// When client hits my-site.glitch.me/data, return document
+app.get("/data", function (request, response) {
+  response.sendFile(__dirname + '/.data/data.json');
+});
+
+// When client hits my-site.glitch.me/log, return document
+app.get("/log", function (request, response) {
+  response.sendFile(__dirname + '/.data/data.log');
+});
