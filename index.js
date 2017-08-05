@@ -1,3 +1,4 @@
+const cors = require('cors');
 const CronJob = require('cron').CronJob;
 const express = require('express');
 const fs = require('fs');
@@ -34,9 +35,10 @@ const options = {
             releases(first: 1) { \
               totalCount \
             } \
-            issues(first: 100, labels: \"manuscript\") { \
+            issues(first: 100, labels: [\"manuscript\", \"title\"]) { \
               edges { \
                 node { \
+                  title \
                   body \
                 } \
               } \
@@ -48,7 +50,7 @@ const options = {
   }),
 };
 
-new CronJob('0 10 */1 * * *', function() {
+new CronJob('30 */4 * * * *', function() {
   request(options, function (error, response, body) {
     if (error) {
       return `ERROR!: ${error}`;
@@ -92,7 +94,7 @@ var listener = app.listen(process.env.PORT, function () {
 });
 
 // When client hits my-site.glitch.me/data, return document
-app.get("/data", function (request, response) {
+app.get("/data", cors(), function (request, response) {
   response.sendFile(__dirname + '/.data/data.json');
 });
 
