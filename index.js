@@ -25,15 +25,12 @@ const options = {
             name \
             description \
             url \
-            languages(first: 1) { \
-              edges { \
-                node { \
-                  name \
-                } \
-              } \
-            } \
             releases(first: 1) { \
               totalCount \
+            } \
+            primaryLanguage { \
+              name \
+              color \
             } \
             issues(first: 100, labels: [\"manuscript\", \"title\"]) { \
               edges { \
