@@ -28,6 +28,7 @@ const options = {
             releases(first: 1) { \
               totalCount \
             } \
+            updatedAt \
             primaryLanguage { \
               name \
               color \
