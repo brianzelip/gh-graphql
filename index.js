@@ -29,6 +29,7 @@ const options = {
               totalCount \
             } \
             pushedAt \
+            updatedAt \
             primaryLanguage { \
               name \
               color \
