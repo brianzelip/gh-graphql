@@ -34,6 +34,13 @@ const options = {
               name \
               color \
             } \
+            repositoryTopics(first: 5) { \
+              nodes { \
+                topic { \
+                  name \
+                } \
+              } \
+            } \
             issues(first: 100, labels: [\"manuscript\", \"title\"]) { \
               edges { \
                 node { \
