@@ -25,6 +25,7 @@ const options = {
             name \
             description \
             url \
+            homepageUrl \
             releases(first: 1) { \
               totalCount \
             } \
@@ -41,7 +42,7 @@ const options = {
                 } \
               } \
             } \
-            issues(first: 100, labels: [\"manuscript\", \"title\"]) { \
+            issues(first: 10, labels: [\"metadata\"]) { \
               edges { \
                 node { \
                   title \
